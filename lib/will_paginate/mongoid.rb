@@ -22,6 +22,7 @@ module WillPaginate
     end
 
     module CollectionMethods
+      include WillPaginate::CollectionMethods
       attr_reader :current_page
 
       def total_entries
