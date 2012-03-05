@@ -22,14 +22,11 @@ module WillPaginate
     end
 
     module CollectionMethods
+      include WillPaginate::CollectionMethods
       attr_reader :current_page
 
       def total_entries
         @total_entries ||= count
-      end
-
-      def total_pages
-        (total_entries / per_page.to_f).ceil
       end
 
       def offset
