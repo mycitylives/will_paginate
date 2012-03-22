@@ -47,7 +47,7 @@ module WillPaginate
           @options[:twitter_bootstrap] ? tag( :li, a_html ) : a_html
         else
           # Twitter-Bootstrap expects: <li class="active"><a href="#{rel_value(page)}">1</a></li>
-          if @options[:twitter_bootstrap]
+          unless @options[:twitter_bootstrap]
             tag(:em, page, :class => 'current')
           else
             a_html = link(:a, page)
