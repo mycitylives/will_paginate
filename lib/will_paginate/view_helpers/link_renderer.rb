@@ -42,36 +42,60 @@ module WillPaginate
     
       def page_number(page)
         unless page == current_page
-          link(page, page, :rel => rel_value(page))
+          # Twitter-Bootstrap expects: <li><a href="#{rel_value(page)}">2</a></li>
+          a_html = link(page, page, :rel => rel_value(page))
+          @options[:twitter_bootstrap] ? tag( :li, a_html ) : a_html
         else
-          tag(:em, page, :class => 'current')
+          # Twitter-Bootstrap expects: <li class="active"><a href="#{rel_value(page)}">1</a></li>
+          if @options[:twitter_bootstrap]
+            tag(:em, page, :class => 'current')
+          else
+            a_html = link(:a, page)
+            tag(:li, a_html, :class => 'active' )
+          end
         end
       end
       
       def gap
         text = @template.will_paginate_translate(:page_gap) { '&hellip;' }
-        %(<span class="gap">#{text}</span>)
+        # Twitter-Bootstrap expects: <li class="disabled"><a>&hellip;</a></li>
+        unless @options[:twitter_bootstrap]
+          %(<span class="gap">#{text}</span>)
+        else
+          %(<li class="disabled"><a>#{text}</a></li>)
+        end
       end
       
       def previous_page
         num = @collection.current_page > 1 && @collection.current_page - 1
-        previous_or_next_page(num, @options[:previous_label], 'previous_page')
+        classname = @options[:twitter_bootstrap] ? '' : 'previous_page' 
+        previous_or_next_page(num, @options[:previous_label], classname)
       end
       
       def next_page
         num = @collection.current_page < @collection.total_pages && @collection.current_page + 1
-        previous_or_next_page(num, @options[:next_label], 'next_page')
+        classname = @options[:twitter_bootstrap] ? '' : 'next_page' 
+        previous_or_next_page(num, @options[:next_label], classname)
       end
       
       def previous_or_next_page(page, text, classname)
         if page
-          link(text, page, :class => classname)
+          # Twitter-Bootstrap expects:  <li><a href="/videos?page=2">Next</a></li>
+          a_html = link(text, page, :class => classname)
+          @options[:twitter_bootstrap] ? tag( :li, a_html ) : a_html
         else
-          tag(:span, text, :class => classname + ' disabled')
+          # Twitter-Bootstrap expects: <li class="disabled"><a>Prev</a></li>   # note: no "href" in <a> tag
+          unless @options[:twitter_bootstrap]
+            tag(:span, text, :class => classname + ' disabled')
+          else
+            tag(:li, tag(:a, text), :class => classname + ' disabled' )
+          end
         end
       end
       
+      # * +html+ is complete HTML for all the pagination controls, minus any surrounding container
       def html_container(html)
+        html = tag(:ul, html) if @options[:twitter_bootstrap]
         tag(:div, html, container_attributes)
       end
       
@@ -82,11 +106,11 @@ module WillPaginate
       end
       
     private
-
+      
       def param_name
         @options[:param_name].to_s
       end
-
+      
       def link(text, target, attributes = {})
         if target.is_a? Fixnum
           attributes[:rel] = rel_value(target)

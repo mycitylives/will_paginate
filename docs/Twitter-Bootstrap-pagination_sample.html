@@ -1,0 +1,30 @@
+<!-- Twitter Bootstrap expects pagination of the following form: -->
+        <!-- note: added arrows to Prev & Next (from 'will_paginate') -->
+
+<div class="pagination pagination-centered">
+  <ul>
+    <li class="disabled"><a>&#8592; Prev</a></li>
+    <li class="active"><a href="/videos?page=1">1</a></li>
+    <li><a href="/videos?page=2">2</a></li>
+    <li><a href="/videos?page=3">3</a></li>
+    <li><a href="/videos?page=4">4</a></li>
+    <li><a href="/videos?page=2">Next &#8594;</a></li>
+  </ul>
+</div>
+
+<!-- (broken) When Twitter Bootstrap styles are applied, 'will_paginate' generates broken output -->
+<div class="pagination pagination-centered">
+  <span class="previous_page disabled">&#8592; Prev</span>
+  <em class="current">1</em>
+  <a rel="next" href="/videos?page=2">2</a>
+  <a href="/videos?page=3">3</a>
+  <a href="/videos?page=4">4</a>
+  <a href="/videos?page=5">5</a>
+  <a href="/videos?page=6">6</a>
+  <a href="/videos?page=7">7</a>
+  <a href="/videos?page=8">8</a> <a href="/videos?page=9">9</a> 
+  <span class="gap">&hellip;</span>
+  <a href="/videos?page=93">93</a>
+  <a href="/videos?page=94">94</a>
+  <a class="next_page" rel="next" href="/videos?page=2">Next &#8594;</a>
+</div>
